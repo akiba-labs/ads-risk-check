@@ -27,10 +27,18 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
 npm run build
+npm run build:pages
 npm start
 ```
 
-`npm test` runs unit tests for the scorer, the quiz tallies, and the digest plan (local vs https webhook).
+`npm test` runs unit tests for the scorer, the quiz tallies, the digest plan (local vs https webhook), and the Pages link helpers.
+
+`npm run build` is the Vercel app (checker, JSON API, share pages). `npm run build:pages` writes a static `out/` for GitHub Pages and checks that internal links and assets resolve under `/ads-risk-check`. Server routes stay in the repo; the Pages script only moves them aside for that build.
+
+- Full app and API (Vercel): https://ads-risk-check.vercel.app
+- Checker (GitHub Pages): https://akiba-labs.github.io/ads-risk-check/
+
+GitHub settings: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Pushes to `main` deploy with `.github/workflows/pages.yml`. Pull requests build the static export and do not deploy. The copy-paste steps for the other tool repos are at the top of `scripts/build-pages.mjs`.
 
 ## Vercel Hobby
 

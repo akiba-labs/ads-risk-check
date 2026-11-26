@@ -3,6 +3,8 @@ import Link from "next/link";
 import { CheckForm } from "@/components/check-form";
 import { FaqSection } from "@/components/faq-section";
 import { HOME_FAQ, META_GUIDE_PATH } from "@/lib/faq";
+import { isGithubPages, pagesSiteUrl } from "@/lib/hosting";
+import { PUBLIC_URL } from "@/lib/share";
 import { SponsorSlot } from "@/components/sponsor-slot";
 
 const levels = [
@@ -39,7 +41,7 @@ const appJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "Ads Risk Check",
-  url: "https://ads-risk-check.vercel.app",
+  url: isGithubPages ? `${pagesSiteUrl(PUBLIC_URL)}/` : PUBLIC_URL,
   applicationCategory: "BusinessApplication",
   operatingSystem: "Any (web browser)",
   isAccessibleForFree: true,

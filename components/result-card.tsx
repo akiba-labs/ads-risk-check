@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { CardDisclaimer } from "@/components/card-disclaimer";
 import { ShareBar } from "@/components/share-bar";
+import { isGithubPages, pagesSiteUrl, withBasePath } from "@/lib/hosting";
 import { PUBLIC_URL, inputsFromResult, resultHeadline, resultPath } from "@/lib/share";
 import { summarizeScore, type ScoreSuccess } from "@/lib/score";
 
@@ -15,7 +16,7 @@ const levelClass: Record<ScoreSuccess["level"], string> = {
 export function ResultCard({ result, shared = false }: { result: ScoreSuccess; shared?: boolean }) {
   const [copied, setCopied] = useState(false);
   const path = resultPath(inputsFromResult(result));
-  const shareUrl = `${PUBLIC_URL}${path}`;
+  const shareUrl = isGithubPages ? `${pagesSiteUrl(PUBLIC_URL)}/` : `${PUBLIC_URL}${path}`;
 
   async function copySummary() {
     try {
@@ -91,12 +92,17 @@ export function ResultCard({ result, shared = false }: { result: ScoreSuccess; s
       </div>
       <div className="mt-4 rounded-2xl border border-white/10 bg-black/25 px-4 py-4" data-testid="share-result">
         <p className="text-xs leading-relaxed text-muted">
-          Share this result. The link carries only the risk level, the matched phrase groups, and the
-          platform. It never includes your notice text, and nothing is stored.
+          {isGithubPages
+            ? "Share the checker. A link to this exact result returns when hosting is back."
+            : "Share this result. The link carries only the risk level, the matched phrase groups, and the platform. It never includes your notice text, and nothing is stored."}
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <ShareBar url={shareUrl} text={`${resultHeadline(result)}. Free checker:`} />
-          {shared ? null : (
+          {isGithubPages ? (
+            <a href={withBasePath("/")} className="text-sm text-muted underline underline-offset-2 hover:text-foreground">
+              Open the checker
+            </a>
+          ) : shared ? null : (
             <a href={path} className="text-sm text-muted underline underline-offset-2 hover:text-foreground">
               Open result page
             </a>
