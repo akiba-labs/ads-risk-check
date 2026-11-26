@@ -1,6 +1,7 @@
 node_modules
 .next
 out
+.pages-export-stash
 build
 .vercel
 .env

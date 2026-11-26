@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DigestForm } from "@/components/digest-form";
 import { SponsorSlot } from "@/components/sponsor-slot";
+import { API_PAUSED_NOTE, isGithubPages } from "@/lib/hosting";
 
 export const metadata: Metadata = {
   title: "Digest",
@@ -16,10 +17,19 @@ export default function DigestPage() {
         A digest stub, not a list we own.
       </h1>
       <p className="mt-4 text-base leading-relaxed text-muted">
-        Leave an email if you want a future note when the phrase list changes. If{" "}
-        <code className="text-foreground">DIGEST_WEBHOOK_URL</code> is an https address, the
-        server forwards the JSON there and keeps no copy. If that variable is unset, the server
-        stores nothing and this browser keeps the address locally.
+        {isGithubPages ? (
+          <>
+            Leave an email if you want a future note when the phrase list changes. This static
+            copy keeps the address in this browser only. {API_PAUSED_NOTE}
+          </>
+        ) : (
+          <>
+            Leave an email if you want a future note when the phrase list changes. If{" "}
+            <code className="text-foreground">DIGEST_WEBHOOK_URL</code> is an https address, the
+            server forwards the JSON there and keeps no copy. If that variable is unset, the server
+            stores nothing and this browser keeps the address locally.
+          </>
+        )}
       </p>
       <div className="mt-8 rounded-3xl border border-line bg-panel/60 p-5 sm:p-7">
         <DigestForm />

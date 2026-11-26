@@ -2,6 +2,7 @@
 
 import { useState, useSyncExternalStore, type FormEvent } from "react";
 import { readLocalDigest, rememberLocalDigest } from "@/lib/digest";
+import { API_PAUSED_NOTE, isGithubPages } from "@/lib/hosting";
 
 type Status = "idle" | "loading" | "ok" | "error";
 
@@ -27,6 +28,15 @@ export function DigestForm() {
     const email = String(new FormData(form).get("email") ?? "");
     setStatus("loading");
     setMessage("");
+
+    if (isGithubPages) {
+      rememberLocalDigest(window.localStorage, email.trim().toLowerCase());
+      window.dispatchEvent(new Event(LOCAL_CHANGE));
+      setStatus("ok");
+      setMessage(`Saved in this browser only. ${API_PAUSED_NOTE}`);
+      form.reset();
+      return;
+    }
 
     try {
       const response = await fetch("/api/digest", {
@@ -90,8 +100,9 @@ export function DigestForm() {
         </p>
       ) : (
         <p className="text-sm text-muted">
-          No webhook is required. Without DIGEST_WEBHOOK_URL, the server forgets the address and
-          this browser keeps it.
+          {isGithubPages
+            ? `This copy has no server. The address stays in this browser. ${API_PAUSED_NOTE}`
+            : "No webhook is required. Without DIGEST_WEBHOOK_URL, the server forgets the address and this browser keeps it."}
         </p>
       )}
       {localCount && localCount > 0 ? (

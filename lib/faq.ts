@@ -1,4 +1,5 @@
 import type { FaqItem } from "@/components/faq-section";
+import { API_PAUSED_NOTE, isGithubPages } from "@/lib/hosting";
 
 export const META_GUIDE_PATH = "/meta-ad-account-disabled-vs-restricted";
 
@@ -37,7 +38,9 @@ export const HOME_FAQ: FaqItem[] = [
   },
   {
     q: "Is there an API or MCP server for AI agents?",
-    a: "Yes. GET or POST https://ads-risk-check.vercel.app/api/score with a notice field returns the same card as JSON, with no key. The same check is a tool on the free Free Agent Tools MCP server at https://free-agent-tools.vercel.app/mcp.",
+    a: isGithubPages
+      ? API_PAUSED_NOTE
+      : "Yes. GET or POST https://ads-risk-check.vercel.app/api/score with a notice field returns the same card as JSON, with no key. The same check is a tool on the free Free Agent Tools MCP server at https://free-agent-tools.vercel.app/mcp.",
   },
 ];
 
